@@ -27,7 +27,8 @@ export const DailyIntakeTracker: React.FC = () => {
 
   const handleLogSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const product = products.find(p => p.id === selectedProductId);
+    const targetId = selectedProductId || products[0]?.id;
+    const product = products.find(p => p.id === targetId);
     if (!product) return;
 
     const fiberGrams = Number((product.nutrition.dietaryFiberGrams * servings).toFixed(1));

@@ -6,6 +6,8 @@ import { ToastContainer } from './components/common/ToastContainer';
 import { GlobalSearchModal } from './components/common/GlobalSearchModal';
 import { ProductDetailModal } from './components/products/ProductDetailModal';
 import { AuthModal } from './components/auth/AuthModal';
+import { OfflineIndicator } from './components/common/OfflineIndicator';
+import { MobileAppTabBar } from './components/common/MobileAppTabBar';
 
 // Pages
 import { HomePage } from './components/home/HomePage';
@@ -33,7 +35,7 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAF5ED] text-[#29211E] selection:bg-[#A96345] selection:text-[#FAF5ED] font-sans antialiased">
+    <div className="min-h-screen flex flex-col bg-[#FAF5ED] text-[#29211E] selection:bg-[#A96345] selection:text-[#FAF5ED] font-sans antialiased pb-20 lg:pb-0">
       {/* Sticky Top Navigation */}
       <Navbar />
 
@@ -54,11 +56,15 @@ const AppContent: React.FC = () => {
       {/* Site Footer */}
       <Footer />
 
+      {/* Mobile & Tablet App Navigation Tab Bar */}
+      <MobileAppTabBar />
+
       {/* Global Modals & Overlays */}
       <ProductDetailModal />
       <GlobalSearchModal />
       <AuthModal isOpen={showLoginModal} onClose={handleCloseAuth} />
       <ToastContainer />
+      <OfflineIndicator />
     </div>
   );
 };

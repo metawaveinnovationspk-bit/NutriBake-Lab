@@ -2,6 +2,7 @@ import React from 'react';
 import { useApp } from '../../context/AppContext';
 import { X, Heart, Share2, ArrowRight, Sparkles, Plus, Check } from 'lucide-react';
 import { OfficialLogoIcon } from '../common/ThemeLogo';
+import { ImageWithFallback } from '../common/ImageWithFallback';
 
 export const ProductDetailModal: React.FC = () => {
   const { 
@@ -48,15 +49,20 @@ export const ProductDetailModal: React.FC = () => {
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-[#2A1F1B]/60 backdrop-blur-sm overflow-y-auto"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 md:p-6 bg-[#2A1F1B]/60 backdrop-blur-sm overflow-y-auto animate-in fade-in duration-200"
       onClick={() => setSelectedProduct(null)}
     >
       <div 
-        className="relative w-full max-w-3xl bg-[#FAF7F2] rounded-3xl border border-[#E6D9CC] my-auto max-h-[92vh] flex flex-col shadow-2xl text-[#2A1F1B] overflow-hidden"
+        className="relative w-full max-w-3xl bg-[#FAF7F2] rounded-t-[32px] sm:rounded-3xl border-t sm:border border-[#E6D9CC] max-h-[92vh] sm:max-h-[90vh] flex flex-col shadow-2xl text-[#2A1F1B] overflow-hidden animate-in slide-in-from-bottom-5 sm:slide-in-from-bottom-0 sm:zoom-in-95 duration-300"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Mobile Drag Indicator Sheet Handle */}
+        <div className="pt-2 sm:hidden flex justify-center bg-white/70">
+          <div className="w-12 h-1.5 bg-[#D1BFA9] rounded-full" aria-hidden="true" />
+        </div>
+
         {/* Top Floating Controls */}
-        <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 sm:py-4 border-b border-[#E8DDCF] bg-white/70 backdrop-blur-md">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-[#E8DDCF] bg-white/70 backdrop-blur-md">
           <div className="flex items-center gap-2 min-w-0">
             <span className="text-sm shrink-0">🧁</span>
             <span className="text-[11px] uppercase tracking-wider text-[#5E7252] font-semibold truncate">
@@ -64,27 +70,29 @@ export const ProductDetailModal: React.FC = () => {
             </span>
           </div>
 
-          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
             <button
               onClick={handleShare}
-              className="p-1.5 sm:p-2 rounded-full hover:bg-[#F6EFE6] text-[#3D261E]/70 hover:text-[#3D261E] transition-colors"
+              className="p-2 sm:p-2 rounded-full hover:bg-[#F6EFE6] text-[#3D261E]/70 hover:text-[#3D261E] transition-colors min-w-[40px] min-h-[40px] flex items-center justify-center touch-manipulation active:scale-90"
               title="Share treat"
+              aria-label="Share treat formulation"
             >
               <Share2 className="w-4 h-4 stroke-[1.8]" />
             </button>
             <button
               onClick={() => toggleSaveProduct(selectedProduct.id)}
-              className={`p-1.5 sm:p-2 rounded-full transition-all ${
+              className={`p-2 sm:p-2 rounded-full transition-all min-w-[40px] min-h-[40px] flex items-center justify-center touch-manipulation active:scale-90 ${
                 saved ? 'bg-[#FDF1EB] text-[#C86B52]' : 'hover:bg-[#F6EFE6] text-[#3D261E]/70 hover:text-[#C86B52]'
               }`}
               title={saved ? 'Remove from saved' : 'Save treat'}
+              aria-label={saved ? 'Remove from saved' : 'Save treat'}
             >
               <Heart className={`w-4 h-4 ${saved ? 'fill-current text-[#C86B52]' : 'stroke-[1.8]'}`} />
             </button>
             <button
               onClick={() => setSelectedProduct(null)}
-              className="p-1.5 sm:p-2 rounded-full hover:bg-[#F6EFE6] text-[#3D261E]/70 hover:text-[#3D261E] transition-colors ml-0.5 sm:ml-1"
-              aria-label="Close"
+              className="p-2 sm:p-2 rounded-full hover:bg-[#F6EFE6] text-[#3D261E]/70 hover:text-[#3D261E] transition-colors min-w-[40px] min-h-[40px] flex items-center justify-center touch-manipulation active:scale-90 ml-0.5"
+              aria-label="Close modal"
             >
               <X className="w-5 h-5 stroke-[1.8]" />
             </button>
@@ -96,11 +104,11 @@ export const ProductDetailModal: React.FC = () => {
           {/* Product Header & Photography */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-7 items-start">
             <div className="relative md:col-span-6 aspect-4/3 overflow-hidden rounded-2xl bg-[#F6EFE6] border border-[#E6D9CC]">
-              <img
+              <ImageWithFallback
                 src={selectedProduct.imageUrl}
                 alt={selectedProduct.name}
+                fallbackType={selectedProduct.category === 'cookies' ? 'cookie' : selectedProduct.category === 'nutriballs' ? 'nutriball' : 'cupcake'}
                 className="w-full h-full object-cover"
-                referrerPolicy="no-referrer"
               />
               {/* Official NutriBake Seal Overlay on Image */}
               <div className="absolute top-3 left-3 flex items-center gap-2 px-3 py-1.5 bg-white/95 backdrop-blur-md rounded-full border border-[#E6D9CC] shadow-xs">

@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { useApp } from '../../context/AppContext';
 import { Search, X, ArrowRight } from 'lucide-react';
+import { ImageWithFallback } from './ImageWithFallback';
 
 export const GlobalSearchModal: React.FC = () => {
   const { searchOpen, setSearchOpen, products, openProductDetail, navigateTo } = useApp();
@@ -127,9 +128,10 @@ export const GlobalSearchModal: React.FC = () => {
                   }}
                   className="p-3 flex items-center gap-4 hover:bg-[#FAF7F2] rounded-2xl cursor-pointer transition-all border border-transparent hover:border-[#E8DDCF] group shadow-2xs hover:shadow-xs"
                 >
-                  <img
+                  <ImageWithFallback
                     src={p.imageUrl}
                     alt={p.name}
+                    fallbackType={p.category === 'cookies' ? 'cookie' : p.category === 'nutriballs' ? 'nutriball' : 'cupcake'}
                     className="w-14 h-14 object-cover shrink-0 rounded-xl border border-[#E8DDCF] shadow-2xs"
                   />
                   <div className="flex-1 min-w-0">

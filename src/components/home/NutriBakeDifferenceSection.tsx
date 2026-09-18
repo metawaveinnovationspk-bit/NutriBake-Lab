@@ -1,4 +1,5 @@
 import React from 'react';
+import { ImageWithFallback } from '../common/ImageWithFallback';
 
 export const NutriBakeDifferenceSection: React.FC = () => {
   const ingredients = [
@@ -45,9 +46,10 @@ export const NutriBakeDifferenceSection: React.FC = () => {
           {/* Main Visual Composition - Raw Ingredient Photography */}
           <div className="lg:col-span-7">
             <div className="relative aspect-4/3 sm:aspect-16/11 overflow-hidden bg-[#EFE6D8]">
-              <img
+              <ImageWithFallback
                 src="https://images.unsplash.com/photo-1586985289688-ca3cf47d3e6e?q=80&w=1400&auto=format&fit=crop"
                 alt="Natural raw baking flours, whole almonds, and grains on wooden surface"
+                fallbackType="hero"
                 className="w-full h-full object-cover grayscale-[5%] contrast-[1.02] hover:scale-[1.015] transition-transform duration-700 ease-out"
               />
               <div className="absolute top-4 left-5 sm:top-6 sm:left-7">

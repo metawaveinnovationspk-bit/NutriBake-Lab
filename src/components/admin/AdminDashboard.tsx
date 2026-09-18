@@ -27,6 +27,7 @@ import {
   Calculator,
   Award
 } from 'lucide-react';
+import { ImageWithFallback } from '../common/ImageWithFallback';
 
 export const AdminDashboard: React.FC = () => {
   const { 
@@ -38,7 +39,8 @@ export const AdminDashboard: React.FC = () => {
     sensoryTrials, 
     user, 
     setUser, 
-    addToast 
+    addToast,
+    loginAsRole 
   } = useApp();
 
   const [activeAdminTab, setActiveAdminTab] = useState<
@@ -71,7 +73,7 @@ export const AdminDashboard: React.FC = () => {
   const handleSaveFormulation = (prod: Product) => {
     const exists = products.some(p => p.id === prod.id);
     if (exists) {
-      updateProduct(prod);
+      updateProduct(prod.id, prod);
       addToast('Formulation Updated', `Successfully updated ${prod.name}`, 'success');
     } else {
       addProduct(prod);
@@ -132,24 +134,28 @@ export const AdminDashboard: React.FC = () => {
           <span className="px-2.5 text-xs font-bold text-[#3D261E]">Portal:</span>
           <button
             onClick={() => {
-              setUser({
-                id: 'admin-1',
-                name: 'Chief Formulator (Admin)',
-                email: 'admin@nutribake.edu',
-                role: 'admin',
-                savedProductIds: [],
-                savedProducts: [],
-                preferences: {
-                  dailyFiberTargetGrams: 30,
-                  dietaryGoal: 'Research Formulation & Quality Assurance',
-                  allergens: []
-                },
-                dailyFiberGoalGrams: 30,
-                currentFiberIntakeGrams: 20,
-                recommendationHistoryCount: 12,
-                memberSince: 'January 2025'
-              });
-              addToast('Admin Privileges Active', 'Full lab permissions enabled.', 'info');
+              if (loginAsRole) {
+                loginAsRole('admin');
+              } else {
+                setUser({
+                  id: 'admin-1',
+                  name: 'Chief Formulator (Admin)',
+                  email: 'admin@nutribake.edu',
+                  role: 'admin',
+                  savedProductIds: [],
+                  savedProducts: [],
+                  preferences: {
+                    dailyFiberTargetGrams: 30,
+                    dietaryGoal: 'Research Formulation & Quality Assurance',
+                    allergens: []
+                  },
+                  dailyFiberGoalGrams: 30,
+                  currentFiberIntakeGrams: 20,
+                  recommendationHistoryCount: 12,
+                  memberSince: 'January 2025'
+                });
+                addToast('Admin Privileges Active', 'Full lab permissions enabled.', 'info');
+              }
             }}
             className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all ${
               user?.role === 'admin'
@@ -161,24 +167,28 @@ export const AdminDashboard: React.FC = () => {
           </button>
           <button
             onClick={() => {
-              setUser({
-                id: 'u-1',
-                name: 'Dr. Sarah Lin (Customer)',
-                email: 'sarah.lin@example.com',
-                role: 'user',
-                savedProductIds: ['prod-cupcakes', 'prod-cookies'],
-                savedProducts: ['prod-cupcakes', 'prod-cookies'],
-                preferences: {
-                  dailyFiberTargetGrams: 28,
-                  dietaryGoal: 'High Fiber & Gut Vitality',
-                  allergens: []
-                },
-                dailyFiberGoalGrams: 28,
-                currentFiberIntakeGrams: 22,
-                recommendationHistoryCount: 4,
-                memberSince: 'March 2026'
-              });
-              addToast('Switched to User Mode', 'Viewing user portal perspective.', 'info');
+              if (loginAsRole) {
+                loginAsRole('user');
+              } else {
+                setUser({
+                  id: 'u-1',
+                  name: 'Dr. Sarah Lin (Customer)',
+                  email: 'sarah.lin@example.com',
+                  role: 'user',
+                  savedProductIds: ['prod-cupcakes', 'prod-cookies'],
+                  savedProducts: ['prod-cupcakes', 'prod-cookies'],
+                  preferences: {
+                    dailyFiberTargetGrams: 28,
+                    dietaryGoal: 'High Fiber & Gut Vitality',
+                    allergens: []
+                  },
+                  dailyFiberGoalGrams: 28,
+                  currentFiberIntakeGrams: 22,
+                  recommendationHistoryCount: 4,
+                  memberSince: 'March 2026'
+                });
+                addToast('Switched to User Mode', 'Viewing user portal perspective.', 'info');
+              }
             }}
             className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all ${
               user?.role === 'user'
@@ -310,9 +320,91 @@ export const AdminDashboard: React.FC = () => {
             </div>
           </div>
 
-          {/* Formulations Table in Soft Rounded Card */}
+          {/* Formulations Table in Soft Rounded Card (Desktop/Tablet Table, Mobile Card Stack) */}
           <div className="card-soft border border-[#E8DDCF] rounded-3xl overflow-hidden bg-white shadow-xs">
-            <div className="overflow-x-auto">
+            {/* Mobile Cards Stack (< md) */}
+            <div className="block md:hidden divide-y divide-[#F0E6DA]">
+              {filteredProducts.map((p) => (
+                <div key={p.id} className="p-4 space-y-3.5 hover:bg-[#FAF7F2]/40 transition-colors">
+                  <div className="flex items-start gap-3">
+                    <ImageWithFallback 
+                      src={p.imageUrl} 
+                      alt={p.name} 
+                      fallbackType={p.category === 'cookies' ? 'cookie' : p.category === 'nutriballs' ? 'nutriball' : 'cupcake'}
+                      className="w-16 h-16 rounded-2xl object-cover border border-[#E8DDCF] shrink-0 shadow-2xs" 
+                    />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-1">
+                        <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full border border-[#D4E0CD] bg-[#EEF3EB] text-[#5E7252]">
+                          {p.category}
+                        </span>
+                        <span className={`inline-block text-[10px] font-semibold px-2.5 py-0.5 rounded-full border ${
+                          p.labStatus === 'Approved'
+                            ? 'bg-[#EEF3EB] border-[#D4E0CD] text-[#5E7252]'
+                            : 'bg-[#FFF7ED] border-[#FED7AA] text-[#C2410C]'
+                        }`}>
+                          {p.labStatus || 'Approved'}
+                        </span>
+                      </div>
+                      <h4 className="font-serif text-base text-[#3D261E] font-medium truncate mt-1">{p.name}</h4>
+                      <p className="text-[11px] text-[#2A1F1B]/60 truncate">
+                        {p.servingSize} • {p.nutrition.calories} kcal • {p.batchCode || 'NB-LAB'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Quick Stat Badges */}
+                  <div className="grid grid-cols-3 gap-2 bg-[#FAF7F2] p-2 rounded-xl text-center text-xs">
+                    <div>
+                      <span className="text-[9.5px] uppercase font-semibold text-[#2A1F1B]/60 block">Fiber</span>
+                      <span className="font-bold text-[#5E7252]">+{p.nutrition.dietaryFiberGrams}g</span>
+                    </div>
+                    <div>
+                      <span className="text-[9.5px] uppercase font-semibold text-[#2A1F1B]/60 block">RS2</span>
+                      <span className="font-bold text-[#C97D36]">+{p.nutrition.resistantStarchGrams}g</span>
+                    </div>
+                    <div>
+                      <span className="text-[9.5px] uppercase font-semibold text-[#2A1F1B]/60 block">Sensory</span>
+                      <span className="font-bold text-[#3D261E]">{p.sensoryScores.overallAcceptability}%</span>
+                    </div>
+                  </div>
+
+                  {/* Touch Action Buttons */}
+                  <div className="flex items-center justify-end gap-2 pt-1 border-t border-[#F0E6DA]">
+                    <button
+                      onClick={() => {
+                        setEditingProduct(p);
+                        setSeedData(null);
+                        setIsModalOpen(true);
+                      }}
+                      className="flex-1 min-h-[40px] px-3 py-2 bg-[#FAF0E4] hover:bg-[#F2E4D2] text-[#3D261E] text-xs font-semibold rounded-xl flex items-center justify-center gap-1.5 transition-all touch-manipulation active:scale-95"
+                    >
+                      <Edit3 className="w-3.5 h-3.5 stroke-[1.8]" />
+                      <span>Edit</span>
+                    </button>
+                    <button
+                      onClick={() => handleDuplicateProduct(p)}
+                      className="px-3 min-h-[40px] py-2 bg-white border border-[#E6D9CC] text-[#3D261E] text-xs font-semibold rounded-xl flex items-center justify-center gap-1.5 hover:bg-[#FAF0E4] transition-all touch-manipulation active:scale-95"
+                      title="Clone"
+                    >
+                      <Copy className="w-3.5 h-3.5 stroke-[1.8]" />
+                      <span>Clone</span>
+                    </button>
+                    <button
+                      onClick={() => deleteProduct(p.id)}
+                      className="p-2.5 min-h-[40px] min-w-[40px] bg-rose-50 border border-rose-200 text-rose-700 rounded-xl flex items-center justify-center hover:bg-rose-100 transition-all touch-manipulation active:scale-95"
+                      title="Delete"
+                      aria-label="Delete formulation"
+                    >
+                      <Trash2 className="w-4 h-4 stroke-[1.8]" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop & Tablet Table (hidden on mobile, block on md+) */}
+            <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead className="bg-[#FAF7F2] border-b border-[#E8DDCF] text-[#3D261E] font-bold text-[11px]">
                   <tr>
@@ -329,9 +421,10 @@ export const AdminDashboard: React.FC = () => {
                   {filteredProducts.map((p) => (
                     <tr key={p.id} className="hover:bg-[#FAF7F2]/60 transition-colors">
                       <td className="p-4 pl-6 flex items-center gap-3">
-                        <img 
+                        <ImageWithFallback 
                           src={p.imageUrl} 
                           alt={p.name} 
+                          fallbackType={p.category === 'cookies' ? 'cookie' : p.category === 'nutriballs' ? 'nutriball' : 'cupcake'}
                           className="w-12 h-12 rounded-xl object-cover border border-[#E8DDCF] shrink-0 shadow-2xs" 
                         />
                         <div>
@@ -378,21 +471,21 @@ export const AdminDashboard: React.FC = () => {
                               setSeedData(null);
                               setIsModalOpen(true);
                             }}
-                            className="p-1.5 hover:bg-[#3A2721]/10 text-[#3A2721] transition-colors"
+                            className="p-2 min-h-[36px] min-w-[36px] flex items-center justify-center rounded-lg hover:bg-[#3A2721]/10 text-[#3D261E] transition-colors touch-manipulation"
                             title="Edit Formulation"
                           >
                             <Edit3 className="w-4 h-4 stroke-[1.5]" />
                           </button>
                           <button
                             onClick={() => handleDuplicateProduct(p)}
-                            className="p-1.5 hover:bg-[#3A2721]/10 text-[#3A2721] transition-colors"
+                            className="p-2 min-h-[36px] min-w-[36px] flex items-center justify-center rounded-lg hover:bg-[#3A2721]/10 text-[#3D261E] transition-colors touch-manipulation"
                             title="Duplicate / Prototype Copy"
                           >
                             <Copy className="w-4 h-4 stroke-[1.5]" />
                           </button>
                           <button
                             onClick={() => deleteProduct(p.id)}
-                            className="p-1.5 hover:bg-rose-50 text-rose-700 transition-colors"
+                            className="p-2 min-h-[36px] min-w-[36px] flex items-center justify-center rounded-lg hover:bg-rose-50 text-rose-700 transition-colors touch-manipulation"
                             title="Delete Formulation"
                           >
                             <Trash2 className="w-4 h-4 stroke-[1.5]" />

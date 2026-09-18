@@ -3,6 +3,7 @@ import { useApp } from '../../context/AppContext';
 import { Search, Menu, X, User, LogOut, LayoutDashboard, ShieldAlert, Heart, Sparkles } from 'lucide-react';
 import { ViewMode } from '../../types';
 import { ThemeLogo } from './ThemeLogo';
+import { PWAInstallButton } from './PWAInstallButton';
 
 export const Navbar: React.FC = () => {
   const { 
@@ -99,6 +100,9 @@ export const Navbar: React.FC = () => {
 
           {/* Right: Controls & Sweet Tactile CTAs */}
           <div className="flex items-center gap-2 sm:gap-3">
+            {/* Offline App Install Button */}
+            <PWAInstallButton />
+
             {/* Search Pill Button - Visible only on Desktop (lg and up) */}
             <button
               onClick={() => setSearchOpen(true)}
@@ -205,6 +209,11 @@ export const Navbar: React.FC = () => {
         {/* Mobile & Tablet Drawer */}
         {mobileMenuOpen && (
           <div className="lg:hidden border-t border-[#E6D9CC] bg-[#FAF7F2] px-5 py-5 space-y-3.5 rounded-b-3xl shadow-lg animate-in slide-in-from-top-3">
+            {/* Offline App Install Banner for mobile */}
+            <div className="flex justify-end">
+              <PWAInstallButton />
+            </div>
+
             {/* 1. Search Button in Menu */}
             <button
               onClick={() => {

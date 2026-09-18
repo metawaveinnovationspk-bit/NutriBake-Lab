@@ -3,6 +3,7 @@ import { Product } from '../../types';
 import { useApp } from '../../context/AppContext';
 import { Heart, ArrowRight, Sparkles } from 'lucide-react';
 import { OfficialLogoIcon } from '../common/ThemeLogo';
+import { ImageWithFallback } from '../common/ImageWithFallback';
 
 interface ProductCardProps {
   product: Product;
@@ -27,12 +28,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <div className="space-y-4">
         {/* Soft Rounded Image Frame */}
         <div className="relative aspect-4/3 w-full overflow-hidden rounded-2xl bg-[#F6EFE6]">
-          <img
+          <ImageWithFallback
             src={product.imageUrl}
             alt={product.name}
+            fallbackType={product.category === 'cookies' ? 'cookie' : product.category === 'nutriballs' ? 'nutriball' : 'cupcake'}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
             loading="lazy"
-            referrerPolicy="no-referrer"
           />
 
           {/* Official NutriBake Logo Seal on Image (Soft Pill) */}

@@ -2,6 +2,7 @@ import React from 'react';
 import { useApp } from '../../context/AppContext';
 import { ArrowRight } from 'lucide-react';
 import { OfficialLogoIcon } from '../common/ThemeLogo';
+import { ImageWithFallback } from '../common/ImageWithFallback';
 
 export const BakedWithPurposeSection: React.FC = () => {
   const { navigateTo } = useApp();
@@ -13,11 +14,11 @@ export const BakedWithPurposeSection: React.FC = () => {
           {/* Editorial Image Left */}
           <div className="lg:col-span-6">
             <div className="relative aspect-4/3 sm:aspect-square overflow-hidden bg-[#EFE6D8]">
-              <img
+              <ImageWithFallback
                 src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?q=80&w=1200&auto=format&fit=crop"
                 alt="Flour preparation, baker hands and natural artisan craftsmanship"
+                fallbackType="hero"
                 className="w-full h-full object-cover grayscale-[4%] contrast-[1.02] hover:scale-[1.015] transition-transform duration-700 ease-out"
-                referrerPolicy="no-referrer"
               />
               {/* Official NutriBake Insignia Stamp */}
               <div className="absolute top-4 left-4 flex items-center gap-2 px-2.5 py-1.5 bg-[#FAF5ED]/95 backdrop-blur-xs border border-[#3A2721]/20 shadow-xs">

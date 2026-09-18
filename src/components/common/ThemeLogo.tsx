@@ -18,6 +18,12 @@ export const OfficialLogoIcon: React.FC<{
     src={nbLogoPng}
     alt="NutriBake Logo"
     className={className}
+    onError={(e) => {
+      const target = e.currentTarget;
+      if (!target.src.includes('/images/NB-logo.png')) {
+        target.src = '/images/NB-logo.png';
+      }
+    }}
     referrerPolicy="no-referrer"
   />
 );

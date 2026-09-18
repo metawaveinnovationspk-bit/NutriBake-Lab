@@ -36,7 +36,9 @@ export const UserDashboard: React.FC = () => {
     productTastingNotes,
     navigateTo, 
     setUser, 
-    addToast 
+    addToast,
+    loginAsRole,
+    signOut
   } = useApp();
 
   const [activeTab, setActiveTab] = useState<
@@ -55,31 +57,43 @@ export const UserDashboard: React.FC = () => {
         <p className="text-xs sm:text-sm text-[#29211E]/75 leading-relaxed">
           Access your saved formulations, dietary targets, and personalized bakery pairings.
         </p>
-        <button
-          onClick={() => {
-            setUser({
-              id: 'u-1',
-              name: 'Dr. Sarah Lin',
-              email: 'sarah.lin@example.com',
-              role: 'user',
-              savedProductIds: ['prod-cupcakes', 'prod-cookies', 'prod-nutriballs'],
-              savedProducts: ['prod-cupcakes', 'prod-cookies', 'prod-nutriballs'],
-              dailyFiberGoalGrams: 28,
-              currentFiberIntakeGrams: 18.6,
-              recommendationHistoryCount: 4,
-              memberSince: 'March 2026',
-              preferences: {
-                dailyFiberTargetGrams: 28,
-                dietaryGoal: 'High Fiber & Gut Vitality',
-                allergens: []
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <button
+            onClick={() => {
+              if (loginAsRole) {
+                loginAsRole('user');
+              } else {
+                setUser({
+                  id: 'u-1',
+                  name: 'Dr. Sarah Lin',
+                  email: 'sarah.lin@example.com',
+                  role: 'user',
+                  savedProductIds: ['prod-cupcakes', 'prod-cookies', 'prod-nutriballs'],
+                  savedProducts: ['prod-cupcakes', 'prod-cookies', 'prod-nutriballs'],
+                  dailyFiberGoalGrams: 28,
+                  currentFiberIntakeGrams: 18.6,
+                  recommendationHistoryCount: 4,
+                  memberSince: 'March 2026',
+                  preferences: {
+                    dailyFiberTargetGrams: 28,
+                    dietaryGoal: 'High Fiber & Gut Vitality',
+                    allergens: []
+                  }
+                });
+                addToast('Welcome Back', 'Signed in as Dr. Sarah Lin', 'success');
               }
-            });
-            addToast('Welcome Back', 'Signed in as Dr. Sarah Lin', 'success');
-          }}
-          className="px-6 py-3.5 bg-[#3A2721] hover:bg-[#2A1C18] text-[#FAF5ED] text-xs uppercase tracking-[0.14em] font-medium transition-colors"
-        >
-          Sign In (Demo Account)
-        </button>
+            }}
+            className="w-full sm:w-auto px-6 py-3.5 bg-[#3A2721] hover:bg-[#2A1C18] text-[#FAF5ED] text-xs uppercase tracking-[0.14em] font-medium transition-colors"
+          >
+            Sign In (Demo Account)
+          </button>
+          <button
+            onClick={() => navigateTo('login')}
+            className="w-full sm:w-auto px-6 py-3.5 border border-[#3A2721]/30 hover:bg-[#3A2721]/5 text-[#3A2721] text-xs uppercase tracking-[0.14em] font-medium transition-colors"
+          >
+            Sign In / Register
+          </button>
+        </div>
       </div>
     );
   }
@@ -124,7 +138,11 @@ export const UserDashboard: React.FC = () => {
           </button>
           <button
             onClick={() => {
-              setUser(null);
+              if (signOut) {
+                signOut();
+              } else {
+                setUser(null);
+              }
               navigateTo('home');
             }}
             className="btn-sweet px-4 py-2.5 border border-[#E6D9CC] text-[#3D261E] bg-white hover:bg-[#FAF0E4] text-xs font-semibold rounded-full transition-all flex items-center gap-1.5 shadow-2xs"
@@ -136,10 +154,10 @@ export const UserDashboard: React.FC = () => {
       </div>
 
       {/* Sweet Pill Navigation Subtabs Bar */}
-      <div className="flex items-center gap-2 p-1.5 bg-white/80 backdrop-blur-md rounded-full border border-[#E8DDCF] shadow-2xs overflow-x-auto">
+      <div className="flex items-center gap-2 p-2 bg-white/85 backdrop-blur-md rounded-2xl sm:rounded-full border border-[#E8DDCF] shadow-2xs overflow-x-auto no-scrollbar scroll-smooth touch-pan-x">
         <button
           onClick={() => setActiveTab('overview')}
-          className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-2 ${
+          className={`px-4 py-2.5 rounded-xl sm:rounded-full text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-2 min-h-[42px] touch-manipulation active:scale-95 ${
             activeTab === 'overview'
               ? 'bg-[#3D261E] text-white shadow-xs'
               : 'text-[#2A1F1B]/70 hover:text-[#3D261E] hover:bg-[#FAF0E4]/60'
@@ -151,7 +169,7 @@ export const UserDashboard: React.FC = () => {
 
         <button
           onClick={() => setActiveTab('intake')}
-          className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-2 ${
+          className={`px-4 py-2.5 rounded-xl sm:rounded-full text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-2 min-h-[42px] touch-manipulation active:scale-95 ${
             activeTab === 'intake'
               ? 'bg-[#3D261E] text-white shadow-xs'
               : 'text-[#2A1F1B]/70 hover:text-[#3D261E] hover:bg-[#FAF0E4]/60'
@@ -163,7 +181,7 @@ export const UserDashboard: React.FC = () => {
 
         <button
           onClick={() => setActiveTab('saved')}
-          className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-2 ${
+          className={`px-4 py-2.5 rounded-xl sm:rounded-full text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-2 min-h-[42px] touch-manipulation active:scale-95 ${
             activeTab === 'saved'
               ? 'bg-[#3D261E] text-white shadow-xs'
               : 'text-[#2A1F1B]/70 hover:text-[#3D261E] hover:bg-[#FAF0E4]/60'
@@ -175,7 +193,7 @@ export const UserDashboard: React.FC = () => {
 
         <button
           onClick={() => setActiveTab('samples')}
-          className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-2 ${
+          className={`px-4 py-2.5 rounded-xl sm:rounded-full text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-2 min-h-[42px] touch-manipulation active:scale-95 ${
             activeTab === 'samples'
               ? 'bg-[#3D261E] text-white shadow-xs'
               : 'text-[#2A1F1B]/70 hover:text-[#3D261E] hover:bg-[#FAF0E4]/60'
@@ -187,7 +205,7 @@ export const UserDashboard: React.FC = () => {
 
         <button
           onClick={() => setActiveTab('family')}
-          className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-2 ${
+          className={`px-4 py-2.5 rounded-xl sm:rounded-full text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-2 min-h-[42px] touch-manipulation active:scale-95 ${
             activeTab === 'family'
               ? 'bg-[#3D261E] text-white shadow-xs'
               : 'text-[#2A1F1B]/70 hover:text-[#3D261E] hover:bg-[#FAF0E4]/60'
@@ -199,7 +217,7 @@ export const UserDashboard: React.FC = () => {
 
         <button
           onClick={() => setActiveTab('settings')}
-          className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-2 ${
+          className={`px-4 py-2.5 rounded-xl sm:rounded-full text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-2 min-h-[42px] touch-manipulation active:scale-95 ${
             activeTab === 'settings'
               ? 'bg-[#3D261E] text-white shadow-xs'
               : 'text-[#2A1F1B]/70 hover:text-[#3D261E] hover:bg-[#FAF0E4]/60'

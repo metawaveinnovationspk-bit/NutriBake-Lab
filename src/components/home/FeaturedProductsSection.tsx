@@ -2,6 +2,7 @@ import React from 'react';
 import { useApp } from '../../context/AppContext';
 import { ArrowRight, Sparkles, Heart } from 'lucide-react';
 import { OfficialLogoIcon } from '../common/ThemeLogo';
+import { ImageWithFallback } from '../common/ImageWithFallback';
 
 export const FeaturedProductsSection: React.FC = () => {
   const { products, openProductDetail, navigateTo, toggleSaveProduct, isProductSaved } = useApp();
@@ -47,9 +48,10 @@ export const FeaturedProductsSection: React.FC = () => {
                 className="lg:col-span-7 group cursor-pointer relative overflow-hidden rounded-2xl bg-[#F6EFE6] border border-[#E6D9CC]"
               >
                 <div className="aspect-16/11 overflow-hidden">
-                  <img
+                  <ImageWithFallback
                     src={showcaseProducts[0].imageUrl}
                     alt={showcaseProducts[0].name}
+                    fallbackType="cupcake"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                   />
                 </div>
@@ -142,9 +144,10 @@ export const FeaturedProductsSection: React.FC = () => {
                 className="lg:col-span-7 order-1 lg:order-2 group cursor-pointer relative overflow-hidden rounded-2xl bg-[#F6EFE6] border border-[#E6D9CC]"
               >
                 <div className="aspect-16/11 overflow-hidden">
-                  <img
+                  <ImageWithFallback
                     src={showcaseProducts[1].imageUrl}
                     alt={showcaseProducts[1].name}
+                    fallbackType="cookie"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                   />
                 </div>
@@ -166,9 +169,10 @@ export const FeaturedProductsSection: React.FC = () => {
                 className="lg:col-span-6 group cursor-pointer relative overflow-hidden rounded-2xl bg-[#F6EFE6] border border-[#E6D9CC]"
               >
                 <div className="aspect-4/3 overflow-hidden">
-                  <img
+                  <ImageWithFallback
                     src={showcaseProducts[2].imageUrl}
                     alt={showcaseProducts[2].name}
+                    fallbackType="nutriball"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                   />
                 </div>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { RecommendationAnswers, RecommendationMatch } from '../../types';
 import { ArrowRight, ArrowLeft, Check, Heart, RotateCcw, CheckCircle2 } from 'lucide-react';
+import { ImageWithFallback } from '../common/ImageWithFallback';
 
 export const RecommendationWizard: React.FC = () => {
   const { products, openProductDetail, toggleSaveProduct, isProductSaved, recommendationResults, setRecommendationResults } = useApp();
@@ -382,9 +383,10 @@ export const RecommendationWizard: React.FC = () => {
                       onClick={() => openProductDetail(p.id)}
                       className="md:col-span-4 aspect-4/3 overflow-hidden bg-[#EFE6D8] cursor-pointer group"
                     >
-                      <img
+                      <ImageWithFallback
                         src={p.imageUrl}
                         alt={p.name}
+                        fallbackType={p.category === 'cookies' ? 'cookie' : p.category === 'nutriballs' ? 'nutriball' : 'cupcake'}
                         className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700"
                       />
                     </div>
